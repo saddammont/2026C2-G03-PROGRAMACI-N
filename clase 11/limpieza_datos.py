@@ -45,8 +45,14 @@ def filtrar_diferencial_alto(datos):
     return datos.iloc[0:0].copy()
 
 
-def resumir_por_tipo_entidad(datos):
-    """Resume compra, venta y diferencial para cada tipo de entidad."""
-    # TODO 7: agrupe por TIPO, calcule el promedio de COMPRA, VENTA y
-    # DIFERENCIAL, redondee y ordene por DIFERENCIAL.
-    return pd.DataFrame()
+def resumir_por_tipo_entidad(datos: pd.DataFrame) -> tuple[float, pd.DataFrame]:
+    """Devuelve el promedio general del diferencial  y el promedio por tipo de entidad de compra venta y diferencial."""
+    
+    promedios_diferencial = datos["DIFERENCIAL"].mean()
+    promedios_por_tipo = (
+        datos.groupby("TIPO")[["COMPRA", "VENTA", "DIFERENCIAL"]]
+            .mean()
+            .round(2)
+            .sort_values(by="DIFERENCIAL", ascending=False)
+    )
+    return promedios_diferencial, promedios_por_tipo
